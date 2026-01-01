@@ -1,26 +1,102 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  /* Primary - 따뜻한 코랄/피치 */
+  --color-primary-50: #fff5f2;
+  --color-primary-100: #ffe8e0;
+  --color-primary-200: #ffcfc1;
+  --color-primary-300: #ffb5a0;
+  --color-primary-400: #ff9b7f;
+  --color-primary-500: #ff8166;
+  --color-primary-600: #e66b52;
+  --color-primary-700: #cc553e;
+  --color-primary-800: #b33f2a;
+  --color-primary-900: #992916;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  /* Secondary - 부드러운 민트/세이지 */
+  --color-secondary-50: #f2f9f7;
+  --color-secondary-100: #e0f2ed;
+  --color-secondary-200: #c1e5db;
+  --color-secondary-300: #a0d8c9;
+  --color-secondary-400: #7fcbb7;
+  --color-secondary-500: #5ebea5;
+  --color-secondary-600: #4a9b86;
+  --color-secondary-700: #367867;
+  --color-secondary-800: #225548;
+  --color-secondary-900: #0e3229;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Accent - 부드러운 라벤더 */
+  --color-accent-50: #f8f5ff;
+  --color-accent-100: #f0e8ff;
+  --color-accent-200: #e1d1ff;
+  --color-accent-300: #d1baff;
+  --color-accent-400: #c2a3ff;
+  --color-accent-500: #b38cff;
+  --color-accent-600: #9970e6;
+  --color-accent-700: #7f54cc;
+  --color-accent-800: #6538b3;
+  --color-accent-900: #4b1c99;
+
+  /* Neutral - 웜 그레이 */
+  --color-neutral-50: #faf9f7;
+  --color-neutral-100: #f5f3f0;
+  --color-neutral-200: #e8e5e0;
+  --color-neutral-300: #dbd7d0;
+  --color-neutral-400: #cec9c0;
+  --color-neutral-500: #b8b3a8;
+  --color-neutral-600: #9a9589;
+  --color-neutral-700: #7c776a;
+  --color-neutral-800: #5e594b;
+  --color-neutral-900: #403b2c;
+
+  /* 폰트 패밀리 */
+  --font-sans: "Pretendard Variable", "Inter", system-ui, sans-serif;
+  --font-serif: "Noto Serif KR", Georgia, serif;
+
+  /* 폰트 크기 - Display */
+  --font-size-display: 3rem;
+  --font-size-display--line-height: 1.2;
+  --font-size-display--letter-spacing: -0.02em;
+
+  /* 폰트 크기 - Headings */
+  --font-size-h1: 2.25rem;
+  --font-size-h1--line-height: 1.3;
+  --font-size-h1--letter-spacing: -0.01em;
+
+  --font-size-h2: 1.875rem;
+  --font-size-h2--line-height: 1.4;
+  --font-size-h2--letter-spacing: -0.01em;
+
+  --font-size-h3: 1.5rem;
+  --font-size-h3--line-height: 1.5;
+
+  --font-size-h4: 1.25rem;
+  --font-size-h4--line-height: 1.5;
+
+  /* 폰트 크기 - Body */
+  --font-size-body-lg: 1.125rem;
+  --font-size-body-lg--line-height: 1.7;
+
+  --font-size-body: 1rem;
+  --font-size-body--line-height: 1.7;
+
+  --font-size-body-sm: 0.875rem;
+  --font-size-body-sm--line-height: 1.6;
+
+  --font-size-caption: 0.75rem;
+  --font-size-caption--line-height: 1.5;
+
+  /* 최대 너비 */
+  --max-width-prose-narrow: 45rem; /* 720px - 글쓰기 영역 */
+  --max-width-content: 60rem; /* 960px - 일반 콘텐츠 */
+
+  --transition-duration-200: 200ms;
+  --transition-duration-300: 300ms;
+  --transition-timing-function-out: cubic-bezier(0.33, 1, 0.68, 1);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  color: var(--color-neutral-900);
+  background-color: var(--color-neutral-50);
 }
