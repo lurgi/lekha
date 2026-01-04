@@ -15,8 +15,9 @@
 
 ## 인증 방식
 - OAuth 2.0 소셜 로그인 (Google, Kakao, Naver)
-- JWT Bearer Token 인증
-- Authorization Header: `Authorization: Bearer <access_token>`
+- JWT 토큰을 httpOnly Cookie로 전송
+- Cookie Name: `access_token`
+- Cookie 설정: `HttpOnly; Secure; SameSite=Strict`
 - 토큰 만료 시간: 86400초 (24시간)
 
 ---
@@ -59,16 +60,19 @@ interface OAuthLoginRequest {
 ```typescript
 interface AuthResponse {
   user: UserResponse;
-  access_token: string;
-  expires_in: number;  // 초 단위, 일반적으로 86400 (24시간)
 }
 
 interface UserResponse {
   id: number;
   username: string;
   email: string;
-  created_at: string;  // ISO 8601 format (datetime)
+  created_at: string;
 }
+```
+
+**Response Headers:**
+```
+Set-Cookie: access_token=<jwt_token>; HttpOnly; Secure; SameSite=Strict; Max-Age=86400; Path=/
 ```
 
 **Error Responses:**
@@ -312,15 +316,16 @@ interface ErrorResponse {
 - Request Body의 optional 필드는 `?`로 표시
 - Response의 모든 필드는 기본적으로 required (백엔드 보장)
 
-### 5. 인증 헤더 처리
-- 모든 인증이 필요한 API 호출 시 자동으로 헤더 추가
-- Axios interceptor 또는 fetch wrapper 사용 권장
+### 5. 인증 쿠키 처리
+- 로그인 성공 시 백엔드가 httpOnly 쿠키로 JWT 토큰 설정
+- 이후 모든 API 요청에 쿠키 자동 포함
+- fetch 옵션: `credentials: 'include'` 필수
 - 예시:
   ```typescript
-  headers: {
-    'Authorization': `Bearer ${accessToken}`,
-    'Content-Type': 'application/json'
-  }
+  fetch(url, {
+    method: 'GET',
+    credentials: 'include'
+  })
   ```
 
 ### 6. API 클라이언트 구조
@@ -340,10 +345,10 @@ interface ErrorResponse {
 
 ## 개발 시 주의사항
 
-1. **인증 토큰 관리**
-   - localStorage 또는 secure cookie에 저장
-   - 토큰 만료 시간 확인 및 갱신 로직 구현
-   - 로그아웃 시 토큰 삭제
+1. **인증 쿠키 관리**
+   - 백엔드가 httpOnly Cookie로 JWT 토큰 관리
+   - 프론트엔드는 토큰을 직접 다루지 않음
+   - 로그아웃 시 백엔드 API 호출하여 쿠키 삭제
 
 2. **API 호출 최적화**
    - React Query 또는 SWR 사용 권장 (캐싱, 재시도, 상태 관리)
@@ -375,13 +380,12 @@ interface ErrorResponse {
 import { MemoResponse, CreateMemoRequest } from '@/types/api';
 
 export async function createMemo(
-  request: CreateMemoRequest,
-  accessToken: string
+  request: CreateMemoRequest
 ): Promise<MemoResponse> {
   const response = await fetch('http://localhost:8080/api/memos', {
     method: 'POST',
+    credentials: 'include',
     headers: {
-      'Authorization': `Bearer ${accessToken}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(request),
