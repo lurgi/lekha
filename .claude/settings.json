@@ -1,21 +1,21 @@
 {
-	"permissions": {
-		"allow": [
-			"WebFetch(domain:localhost)",
-			"Bash(curl:*)",
-			"Bash(yarn:*)",
-			"Bash(npm:*)",
-			"Bash(cat:*)",
-			"Bash(tree:*)"
-		],
-		"deny": [
-			"Read(./.env)",
-			"Read(./.env.*)",
-			"Read(./node_modules/**)",
-			"Read(./.next/**)",
-			"Read(./build/**)",
-			"Read(./dist/**)",
-			"Read(./.git/**)"
-		]
-	}
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:localhost)",
+      "Bash(curl:*)",
+      "Bash(yarn:*)",
+      "Bash(npm:*)",
+      "Bash(cat:*)",
+      "Bash(tree:*)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./node_modules/**)",
+      "Read(./.next/**)",
+      "Read(./build/**)",
+      "Read(./dist/**)",
+      "Read(./.git/**)"
+    ]
+  }
 }
