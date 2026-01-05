@@ -500,6 +500,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-oauth/google@npm:^0.13.4":
+  version: 0.13.4
+  resolution: "@react-oauth/google@npm:0.13.4"
+  peerDependencies:
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+  checksum: 10c0/0df487a22a4bd896c6ba3f7495618799c7dadf160776339b749a494bf88898c901b9e3db72bf6902039c927c465a23fe45ef12e948666a5ae62e79687d121eab
+  languageName: node
+  linkType: hard
+
 "@swc/helpers@npm:0.5.15":
   version: 0.5.15
   resolution: "@swc/helpers@npm:0.5.15"
@@ -682,6 +692,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/kakao-js-sdk@npm:^1.39.5":
+  version: 1.39.5
+  resolution: "@types/kakao-js-sdk@npm:1.39.5"
+  checksum: 10c0/91b977d3521d16338d7fe6db66a18a49b6eaadf4b4fb21d69ebb4c3821263e82875f9b9649db609a347117454e6f1de07cb740dde30776fa99df339520905e9b
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:^20":
   version: 20.19.27
   resolution: "@types/node@npm:20.19.27"
@@ -786,7 +803,9 @@ __metadata:
   resolution: "lekha@workspace:."
   dependencies:
     "@biomejs/biome": "npm:2.2.0"
+    "@react-oauth/google": "npm:^0.13.4"
     "@tailwindcss/postcss": "npm:^4"
+    "@types/kakao-js-sdk": "npm:^1.39.5"
     "@types/node": "npm:^20"
     "@types/react": "npm:^19"
     "@types/react-dom": "npm:^19"
