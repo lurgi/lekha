@@ -5,7 +5,6 @@ import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { oauthLoginAction } from "@/app/actions/auth";
-import { Card } from "@/components/ui/Card";
 import { cn } from "@/lib/utils";
 import type { OAuthProvider } from "@/types/api";
 
@@ -13,6 +12,11 @@ const BASE_BUTTON_STYLES =
   "w-full inline-flex items-center justify-center gap-3 px-6 py-3.5 text-body font-medium rounded-xl transition-all duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
 
 const OAUTH_CALLBACK_URL = `${typeof window !== "undefined" ? window.location.origin : ""}/auth/callback`;
+
+const COPYWRITING = {
+  tagline: "당신의 생각이 💭 글이 되도록 ✏️",
+  title: "Lekha",
+} as const;
 
 interface OAuthButtonProps {
   isLoading: boolean;
@@ -211,41 +215,37 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-neutral-50 flex items-center justify-center px-4">
-      <div className="w-full max-w-md space-y-8">
-        <div className="text-center space-y-2">
-          <h1 className="text-h2 font-bold text-neutral-900">
-            Lekha에 오신 것을 환영합니다
+      <div className="w-full max-w-md space-y-12">
+        <div className="text-center space-y-8">
+          <h1 className="text-display font-bold text-neutral-900">
+            {COPYWRITING.title}
           </h1>
-          <p className="text-body text-neutral-700">
-            간편하게 로그인하고 글쓰기를 시작하세요
+          <p className="text-h3 md:text-h2 font-semibold text-primary-600">
+            {COPYWRITING.tagline}
           </p>
         </div>
 
-        <Card variant="default">
-          <div className="space-y-3">
-            <GoogleLoginButton
-              isLoading={isLoading === "Google"}
-              setIsLoading={setIsLoading}
-              setError={setError}
-            />
-            <KakaoLoginButton
-              isLoading={isLoading === "Kakao"}
-              setIsLoading={setIsLoading}
-              setError={setError}
-            />
-            <NaverLoginButton
-              isLoading={isLoading === "Naver"}
-              setIsLoading={setIsLoading}
-              setError={setError}
-            />
-          </div>
+        <div className="space-y-3">
+          <GoogleLoginButton
+            isLoading={isLoading === "Google"}
+            setIsLoading={setIsLoading}
+            setError={setError}
+          />
+          <KakaoLoginButton
+            isLoading={isLoading === "Kakao"}
+            setIsLoading={setIsLoading}
+            setError={setError}
+          />
+          <NaverLoginButton
+            isLoading={isLoading === "Naver"}
+            setIsLoading={setIsLoading}
+            setError={setError}
+          />
+        </div>
 
-          {error && (
-            <p className="mt-4 text-body-sm text-center text-red-600">
-              {error}
-            </p>
-          )}
-        </Card>
+        {error && (
+          <p className="text-body-sm text-center text-red-600">{error}</p>
+        )}
       </div>
     </div>
   );
