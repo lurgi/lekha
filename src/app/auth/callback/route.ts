@@ -1,6 +1,17 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { oauthLoginAction } from "@/app/actions/auth";
 
+interface KakaoUserInfo {
+  id: number;
+  connected_at: string;
+  kakao_account: {
+    has_email: boolean;
+    email_needs_agreement: boolean;
+    is_email_valid: boolean;
+    is_email_verified: boolean;
+    email: string;
+  };
+}
 interface NaverUserInfo {
   resultcode: string;
   message: string;
@@ -54,27 +65,13 @@ async function handleKakaoCallback(
       );
     }
 
-    const userInfo = (await userResponse.json()) as {
-      id: number;
-      properties: {
-        nickname?: string;
-      };
-      kakao_account: {
-        email: string;
-        profile?: {
-          nickname?: string;
-        };
-      };
-    };
+    const userInfo: KakaoUserInfo = await userResponse.json();
 
     await oauthLoginAction({
       provider: "Kakao",
       provider_user_id: String(userInfo.id),
       email: userInfo.kakao_account?.email,
-      username:
-        userInfo.kakao_account?.profile?.nickname ||
-        userInfo.properties?.nickname ||
-        "Kakao User",
+      username: "User",
     });
 
     return NextResponse.redirect(new URL("/", request.url));
