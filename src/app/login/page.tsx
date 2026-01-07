@@ -125,6 +125,7 @@ function KakaoLoginButton({
     window.Kakao.Auth.authorize({
       redirectUri: `${window.location.origin}/auth/callback`,
       state: "kakao_login",
+      scope: "account_email",
     });
   };
 
@@ -166,7 +167,7 @@ function NaverLoginButton({
     const redirectUri = encodeURIComponent(
       process.env.NEXT_PUBLIC_NAVER_CALLBACK_URL || "",
     );
-    const state = Math.random().toString(36).substring(7);
+    const state = `naver_${Math.random().toString(36).substring(7)}`;
 
     const naverAuthUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&state=${state}`;
 
