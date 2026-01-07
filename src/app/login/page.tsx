@@ -12,6 +12,8 @@ import type { OAuthProvider } from "@/types/api";
 const BASE_BUTTON_STYLES =
   "w-full inline-flex items-center justify-center gap-3 px-6 py-3.5 text-body font-medium rounded-xl transition-all duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
 
+const OAUTH_CALLBACK_URL = `${typeof window !== "undefined" ? window.location.origin : ""}/auth/callback`;
+
 interface OAuthButtonProps {
   isLoading: boolean;
   setIsLoading: (provider: OAuthProvider | null) => void;
@@ -123,7 +125,7 @@ function KakaoLoginButton({
     setError(null);
 
     window.Kakao.Auth.authorize({
-      redirectUri: `${window.location.origin}/auth/callback`,
+      redirectUri: OAUTH_CALLBACK_URL,
       state: "kakao_login",
       scope: "account_email",
     });
@@ -164,9 +166,7 @@ function NaverLoginButton({
 }: OAuthButtonProps) {
   const handleNaverLogin = () => {
     const clientId = process.env.NEXT_PUBLIC_NAVER_CLIENT_ID;
-    const redirectUri = encodeURIComponent(
-      process.env.NEXT_PUBLIC_NAVER_CALLBACK_URL || "",
-    );
+    const redirectUri = encodeURIComponent(OAUTH_CALLBACK_URL);
     const state = `naver_${Math.random().toString(36).substring(7)}`;
 
     const naverAuthUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&state=${state}`;
