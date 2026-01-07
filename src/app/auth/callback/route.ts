@@ -1,6 +1,17 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { oauthLoginAction } from "@/app/actions/auth";
 
+interface NaverUserInfo {
+  resultcode: string;
+  message: string;
+  response: {
+    id: string;
+    email: string;
+    name?: string;
+    nickname?: string;
+  };
+}
+
 async function handleKakaoCallback(
   code: string,
   request: NextRequest,
@@ -78,9 +89,71 @@ async function handleNaverCallback(
   state: string,
   request: NextRequest,
 ): Promise<NextResponse> {
-  return NextResponse.redirect(
-    new URL("/login?error=naver_not_implemented", request.url),
-  );
+  try {
+    const tokenResponse = await fetch("https://nid.naver.com/oauth2.0/token", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({
+        grant_type: "authorization_code",
+        client_id: process.env.NEXT_PUBLIC_NAVER_CLIENT_ID || "",
+        client_secret: process.env.NAVER_CLIENT_SECRET || "",
+        redirect_uri: "http://localhost:3000/auth/callback",
+        code,
+        state,
+      }),
+    });
+
+    if (!tokenResponse.ok) {
+      const error = await tokenResponse.json();
+      console.error("Naver token exchange failed:", error);
+      return NextResponse.redirect(
+        new URL("/login?error=token_exchange_failed", request.url),
+      );
+    }
+
+    const { access_token } = await tokenResponse.json();
+
+    const userResponse = await fetch("https://openapi.naver.com/v1/nid/me", {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+
+    if (!userResponse.ok) {
+      console.error("Naver user info fetch failed");
+      const res = await userResponse.json();
+      console.log(res);
+      return NextResponse.redirect(
+        new URL("/login?error=user_info_failed", request.url),
+      );
+    }
+
+    const userResult: NaverUserInfo = await userResponse.json();
+
+    if (userResult.resultcode !== "00") {
+      console.error("Naver API error:", userResult.message);
+      return NextResponse.redirect(
+        new URL("/login?error=naver_api_failed", request.url),
+      );
+    }
+
+    await oauthLoginAction({
+      provider: "Naver",
+      provider_user_id: userResult.response.id,
+      email: userResult.response.email,
+      username:
+        userResult.response.nickname ||
+        userResult.response.name ||
+        "Naver User",
+    });
+
+    return NextResponse.redirect(new URL("/", request.url));
+  } catch (error) {
+    console.error("Naver login error:", error);
+    return NextResponse.redirect(new URL("/login?error=unknown", request.url));
+  }
 }
 
 export async function GET(request: NextRequest) {
