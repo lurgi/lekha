@@ -199,7 +199,65 @@
 
 ---
 
-## 5. 레이아웃 & 간격
+## 5. 버튼 크기 시스템
+
+### 크기 규격
+
+```typescript
+interface ButtonSizes {
+  sm: "py-2 px-4 text-body-sm";    // 높이 ~32-36px
+  md: "py-2.5 px-5 text-body";     // 높이 ~40-44px (기본값)
+  lg: "py-3.5 px-6 text-body";     // 높이 ~48-52px
+}
+```
+
+### 사용 가이드
+
+**Small (sm)**
+- **용도**: 보조 액션, 인라인 버튼, 테이블 내 버튼
+- **예시**: 취소, 편집, 삭제
+- **크기**: `32-36px` 높이
+
+**Medium (md)** ← **기본값**
+- **용도**: 일반적인 모든 버튼 (CTA, 폼 제출, OAuth 로그인 등)
+- **예시**: 저장하기, Google로 계속하기, 다음
+- **크기**: `40-44px` 높이
+- **이유**: 웹 표준 버튼 크기, 클릭하기 적당하고 시각적으로 균형 있음
+
+**Large (lg)**
+- **용도**: 히어로 섹션의 주요 CTA, 랜딩 페이지 전환 버튼
+- **예시**: 지금 시작하기, 무료로 시작하기
+- **크기**: `48-52px` 높이
+- **주의**: 일반 페이지에서 사용 시 너무 크게 느껴질 수 있음
+
+### 적용 예시
+
+```tsx
+// OAuth 로그인 버튼 (기본값 md 사용, className으로 스타일 주입)
+<Button className="w-full bg-white border-2 border-neutral-300 text-neutral-900 hover:bg-neutral-50 rounded-xl">
+  Google로 계속하기
+</Button>
+
+// 폼 제출 버튼
+<Button variant="primary" size="md">저장하기</Button>
+
+// 히어로 섹션 CTA
+<Button variant="primary" size="lg">지금 시작하기</Button>
+
+// 보조 액션
+<Button variant="ghost" size="sm">취소</Button>
+```
+
+### 디자인 원칙
+
+1. **웹 표준 준수**: 너무 크거나 작지 않은 적절한 크기
+2. **일관성**: 같은 맥락에서는 같은 크기 사용
+3. **계층 구조**: 주요 액션은 크게, 보조 액션은 작게
+4. **터치 타겟**: 모든 크기가 최소 터치 타겟 (44px) 충족 (md 이상 권장)
+
+---
+
+## 6. 레이아웃 & 간격
 
 ### 컨테이너 설정 (Tailwind v4)
 
@@ -238,7 +296,7 @@
 
 ---
 
-## 6. 인터랙션 & 애니메이션
+## 7. 인터랙션 & 애니메이션
 
 ### 애니메이션 설정 (Tailwind v4)
 
@@ -259,7 +317,7 @@
 
 ---
 
-## 7. 반응형 규칙
+## 8. 반응형 규칙
 
 ### 브레이크포인트
 
@@ -282,7 +340,7 @@
 
 ---
 
-## 8. AI 생성 콘텐츠 톤앤매너
+## 9. AI 생성 콘텐츠 톤앤매너
 
 ### 글 작성 AI의 어조
 
@@ -303,7 +361,7 @@
 
 ---
 
-## 9. 구현 시 주의사항
+## 10. 구현 시 주의사항
 
 1. **일관성**: 모든 컴포넌트가 위 규칙을 따라야 함
 2. **접근성**: 키보드 네비게이션, 스크린 리더 고려
@@ -317,16 +375,29 @@
 이 디자인 시스템을 바탕으로 구현된 UI 컴포넌트들은 `src/components/ui/` 디렉토리에 위치합니다.
 
 **사용 가능한 컴포넌트**:
-- `Button`: Primary, Secondary, Ghost 변형
+- `Button`: Primary, Secondary, Ghost 변형 / SM, MD(기본), LG 크기
 - `Input`: 텍스트 입력
 - `Textarea`: 글쓰기용 텍스트 영역
-- `Card`: 기본, Accent 변형
+- `Card`: 기본, Accent, Static 변형
 
 각 컴포넌트는 위의 디자인 원칙을 따르며, props를 통해 커스터마이징할 수 있습니다.
 
+**Button 사용 예시**:
+```tsx
+{/* 기본 variant 사용 */}
+<Button variant="primary" size="md">저장하기</Button>
+<Button variant="secondary">다음</Button>
+<Button variant="ghost" size="sm">취소</Button>
+
+{/* className으로 커스텀 스타일 주입 (OAuth 등) */}
+<Button className="w-full bg-white border-2 border-neutral-300 text-neutral-900 hover:bg-neutral-50 rounded-xl">
+  Google로 계속하기
+</Button>
+```
+
 ---
 
-## 10. 로그인/인증 페이지 가이드라인
+## 11. 로그인/인증 페이지 가이드라인
 
 ### 레퍼런스
 - **Notion 로그인 화면**: 깔끔하고 넓은 느낌, 미니멀한 디자인
@@ -378,7 +449,15 @@
 
     {/* 버튼들 - Card 없이 직접 배치 */}
     <div className="space-y-3">
-      {/* 로그인 버튼들 */}
+      <Button className="w-full bg-white border-2 border-neutral-300 text-neutral-900 hover:bg-neutral-50 rounded-xl">
+        Google로 계속하기
+      </Button>
+      <Button className="w-full bg-[#FEE500] text-neutral-900 hover:bg-[#FDD835] rounded-xl">
+        Kakao로 계속하기
+      </Button>
+      <Button className="w-full bg-[#03C75A] text-white hover:bg-[#02B350] rounded-xl">
+        Naver로 계속하기
+      </Button>
     </div>
 
     {/* 에러 메시지 */}
@@ -410,11 +489,39 @@
 - **태그라인**: `text-primary-600` (브랜드 코랄 색상)
 - **에러**: `text-red-600` (명확한 피드백)
 
+### OAuth 버튼 스타일링
+
+**중요**: OAuth 로그인 버튼은 variant가 아닌 **className으로 스타일 주입**
+
+```tsx
+// Google 로그인 버튼
+<Button className="w-full bg-white border-2 border-neutral-300 text-neutral-900 hover:bg-neutral-50 rounded-xl focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2">
+  {icon} Google로 계속하기
+</Button>
+
+// Kakao 로그인 버튼 (브랜드 컬러: #FEE500)
+<Button className="w-full bg-[#FEE500] text-neutral-900 hover:bg-[#FDD835] rounded-xl focus:ring-2 focus:ring-[#FEE500] focus:ring-offset-2">
+  {icon} Kakao로 계속하기
+</Button>
+
+// Naver 로그인 버튼 (브랜드 컬러: #03C75A)
+<Button className="w-full bg-[#03C75A] text-white hover:bg-[#02B350] rounded-xl focus:ring-2 focus:ring-[#03C75A] focus:ring-offset-2">
+  {icon} Naver로 계속하기
+</Button>
+```
+
+**이유**:
+- OAuth 버튼은 로그인 페이지에만 사용되는 특수한 경우
+- 각 플랫폼의 브랜드 컬러를 정확히 반영해야 함
+- Button 컴포넌트는 범용적으로 유지 (primary, secondary, ghost만)
+- 프로젝트별 특수 케이스는 className으로 유연하게 처리
+
 ### 실제 예시
 
 Lekha 로그인 페이지는 이 가이드라인을 따릅니다:
 - 제목 "Lekha"와 태그라인 "당신의 생각이 💭 글이 되도록 ✏️"로 구성
 - **Card 없이 로그인 버튼 직접 배치**: Card는 그룹핑이나 시각적 계층에 기여하지 않으므로 제거
+- **OAuth 버튼은 className으로 스타일 주입**: 각 플랫폼 브랜드 컬러 정확히 반영
 - Sans-serif 폰트로 통일: 일관된 타이포그래피로 전문성 확보
 - 넉넉한 여백: 간격(spacing)으로 시각적 그룹핑 해결
 
