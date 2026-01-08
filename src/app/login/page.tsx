@@ -220,7 +220,7 @@ export default function LoginPage() {
           <h1 className="text-display font-bold text-neutral-900">
             {COPYWRITING.title}
           </h1>
-          <p className="text-h3 md:text-h2 font-semibold text-primary-600">
+          <p className="text-body-lg md:text-h4 font-semibold text-primary-600">
             {COPYWRITING.tagline}
           </p>
         </div>

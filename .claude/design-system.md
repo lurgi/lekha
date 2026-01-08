@@ -37,10 +37,12 @@
 - 복고풍 감성
 - 섬세한 디테일과 의도적인 배치
 
-**모바일 우선 설계**
+**모바일 우선 설계 (Mobile-First Web, Not App)**
 - 최대 너비 제한으로 단조롭고 집중력 높은 UI (Claude AI처럼)
 - 태블릿/모바일 최적화
 - 데스크톱은 중앙 정렬로 여백 활용
+- **중요**: "모바일 우선"은 모바일 앱 스타일이 아닌 반응형 웹을 의미
+- 웹다운 느낌을 유지하되 작은 화면에서도 잘 작동하도록 설계
 
 **커뮤니티 감각 (Meetup 레퍼런스)**
 - 친근하고 접근하기 쉬운 인터페이스
@@ -170,6 +172,30 @@
 - **본문**: `font-sans` + `font-normal`
 - **강조**: `font-serif` (선택적, 특별한 경우)
 - **색상**: `text-neutral-900` (제목), `text-neutral-700` (본문)
+
+### 웹 타이포그래피 원칙
+
+**적절한 크기 선택:**
+- **Page Hero 제목**: `text-display` (48px) 또는 `text-h1` (36px)
+- **Section 제목**: `text-h2` (30px) ~ `text-h3` (24px)
+- **Subsection 제목**: `text-h4` (20px)
+- **본문/설명**: `text-body` (16px) ~ `text-body-lg` (18px)
+- **캐치프레이즈/부제**: `text-body-lg` (18px) ~ `text-h4` (20px) ← **웹 표준**
+- **Caption**: `text-body-sm` (14px) ~ `text-caption` (12px)
+
+**임팩트 만들기:**
+- ❌ **잘못된 방법**: 글자 크기를 키워서 임팩트 (앱 같아짐)
+- ✅ **올바른 방법**:
+  - 컨텐츠 자체 (강렬한 카피라이팅)
+  - 색상 대비 (primary-500/600 등)
+  - 시각적 요소 (아이콘, 일러스트)
+  - 여백과 레이아웃
+  - 애니메이션 (subtle)
+
+**웹 vs 앱 구분:**
+- **웹**: 정보 밀도 높음, 상대적으로 작은 글자, 여러 계층의 텍스트
+- **앱**: 한 화면에 적은 정보, 큰 글자로 가독성 강조, 터치 타겟 크기
+- Lekha는 **웹 서비스**이므로 웹 타이포그래피 원칙 준수
 
 ---
 
@@ -345,8 +371,8 @@
       <h1 className="text-display font-bold text-neutral-900">
         서비스명
       </h1>
-      <p className="text-h3 md:text-h2 font-semibold text-primary-600">
-        핵심 태그라인
+      <p className="text-body-lg md:text-h4 font-semibold text-primary-600">
+        핵심 태그라인 (웹 표준: 18-20px)
       </p>
     </div>
 
@@ -394,4 +420,4 @@ Lekha 로그인 페이지는 이 가이드라인을 따릅니다:
 
 ---
 
-**마지막 업데이트**: 2026-01-07
+**마지막 업데이트**: 2026-01-08
