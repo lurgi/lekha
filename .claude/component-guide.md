@@ -206,38 +206,68 @@ const variantStyles = {
 
 ### 기본 컴포넌트 템플릿
 
-**Variant가 있는 경우 (Button, Card 등)**
+**Variant와 Size가 있는 경우 (Button)**
 ```typescript
 import type { ButtonHTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary" | "ghost";
+  size?: "sm" | "md" | "lg";
   children: React.ReactNode;
 }
 
 export function Button({
   variant = "primary",
+  size = "md",
   children,
   className,
   ...props
 }: ButtonProps) {
   const baseStyles =
-    "inline-flex items-center justify-center gap-2 font-medium transition-all duration-200 ease-out focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed";
+    "inline-flex items-center justify-center font-medium transition-all duration-200 ease-out focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed";
+
+  const sizeStyles = {
+    sm: "gap-2 px-4 py-2 text-body-sm",
+    md: "gap-2 px-5 py-2.5 text-body",
+    lg: "gap-3 px-6 py-3.5 text-body",
+  };
 
   const variantStyles = {
-    primary: "px-6 py-3 bg-primary-500 hover:bg-primary-600 active:bg-primary-700 text-white text-body rounded-full focus:ring-2 focus:ring-primary-500 focus:ring-offset-2",
-    secondary: "px-6 py-3 bg-white hover:bg-neutral-50 active:bg-neutral-100 text-neutral-900 text-body border-2 border-neutral-300 hover:border-neutral-400 rounded-full focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2",
-    ghost: "px-4 py-2 text-neutral-700 hover:text-neutral-900 hover:bg-neutral-100 text-body-sm rounded-lg focus:ring-2 focus:ring-neutral-300",
+    primary: "bg-primary-500 hover:bg-primary-600 active:bg-primary-700 text-white rounded-full focus:ring-2 focus:ring-primary-500 focus:ring-offset-2",
+    secondary: "bg-white hover:bg-neutral-50 active:bg-neutral-100 text-neutral-900 border-2 border-neutral-300 hover:border-neutral-400 rounded-full focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2",
+    ghost: "text-neutral-700 hover:text-neutral-900 hover:bg-neutral-100 rounded-lg focus:ring-2 focus:ring-neutral-300",
   };
 
   return (
     <button
-      className={cn(baseStyles, variantStyles[variant], className)}
+      className={cn(baseStyles, sizeStyles[size], variantStyles[variant], className)}
       {...props}
     >
       {children}
     </button>
+  );
+}
+```
+
+**Variant만 있는 경우 (Card 등)**
+```typescript
+import { cn } from "@/lib/utils";
+
+interface CardProps {
+  variant?: "default" | "accent";
+  children: React.ReactNode;
+  className?: string;
+}
+
+export function Card({ variant = "default", children, className }: CardProps) {
+  const variantStyles = {
+    default: "bg-white border-2 border-neutral-200 hover:border-neutral-300 rounded-2xl p-6 transition-all duration-200 ease-out hover:shadow-md",
+    accent: "bg-gradient-to-br from-accent-50 to-primary-50 border-2 border-accent-200 rounded-2xl p-6 shadow-sm",
+  };
+
+  return (
+    <div className={cn(variantStyles[variant], className)}>{children}</div>
   );
 }
 ```

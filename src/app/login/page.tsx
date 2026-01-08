@@ -5,11 +5,8 @@ import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { oauthLoginAction } from "@/app/actions/auth";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
 import type { OAuthProvider } from "@/types/api";
-
-const BASE_BUTTON_STYLES =
-  "w-full inline-flex items-center justify-center gap-3 px-6 py-3.5 text-body font-medium rounded-xl transition-all duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
 
 const OAUTH_CALLBACK_URL = `${typeof window !== "undefined" ? window.location.origin : ""}/auth/callback`;
 
@@ -66,14 +63,11 @@ function GoogleLoginButton({
   });
 
   return (
-    <button
+    <Button
       type="button"
       onClick={() => handleGoogleLogin()}
       disabled={isLoading}
-      className={cn(
-        BASE_BUTTON_STYLES,
-        "bg-white border-2 border-neutral-300 text-neutral-900 hover:bg-neutral-50 focus:ring-neutral-400",
-      )}
+      className="w-full bg-white border-2 border-neutral-300 text-neutral-900 hover:bg-neutral-50 rounded-xl focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2"
     >
       {isLoading ? (
         <Loader2 className="w-5 h-5 animate-spin" />
@@ -103,7 +97,7 @@ function GoogleLoginButton({
         </svg>
       )}
       <span>Google로 계속하기</span>
-    </button>
+    </Button>
   );
 }
 
@@ -136,14 +130,11 @@ function KakaoLoginButton({
   };
 
   return (
-    <button
+    <Button
       type="button"
       onClick={handleKakaoLogin}
       disabled={isLoading}
-      className={cn(
-        BASE_BUTTON_STYLES,
-        "bg-[#FEE500] text-neutral-900 hover:bg-[#FDD835] focus:ring-[#FEE500]",
-      )}
+      className="w-full bg-[#FEE500] text-neutral-900 hover:bg-[#FDD835] rounded-xl focus:ring-2 focus:ring-[#FEE500] focus:ring-offset-2"
     >
       {isLoading ? (
         <Loader2 className="w-5 h-5 animate-spin" />
@@ -159,7 +150,7 @@ function KakaoLoginButton({
         </svg>
       )}
       <span>Kakao로 계속하기</span>
-    </button>
+    </Button>
   );
 }
 
@@ -182,14 +173,11 @@ function NaverLoginButton({
   };
 
   return (
-    <button
+    <Button
       type="button"
       onClick={handleNaverLogin}
       disabled={isLoading}
-      className={cn(
-        BASE_BUTTON_STYLES,
-        "bg-[#03C75A] text-white hover:bg-[#02B350] focus:ring-[#03C75A]",
-      )}
+      className="w-full bg-[#03C75A] text-white hover:bg-[#02B350] rounded-xl focus:ring-2 focus:ring-[#03C75A] focus:ring-offset-2"
     >
       {isLoading ? (
         <Loader2 className="w-5 h-5 animate-spin" />
@@ -205,7 +193,7 @@ function NaverLoginButton({
         </svg>
       )}
       <span>Naver로 계속하기</span>
-    </button>
+    </Button>
   );
 }
 
