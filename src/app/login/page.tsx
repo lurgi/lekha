@@ -6,9 +6,10 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { oauthLoginAction } from "@/app/actions/auth";
 import { Button } from "@/components/ui/Button";
+import { ROUTES } from "@/constants/routes";
 import type { OAuthProvider } from "@/types/api";
 
-const OAUTH_CALLBACK_URL = `${typeof window !== "undefined" ? window.location.origin : ""}/auth/callback`;
+const OAUTH_CALLBACK_URL = `${typeof window !== "undefined" ? window.location.origin : ""}${ROUTES.AUTH_CALLBACK}`;
 
 const COPYWRITING = {
   tagline: "당신의 생각이 💭 글이 되도록 ✏️",
@@ -50,7 +51,9 @@ function GoogleLoginButton({
           username: userInfo.name,
         });
 
-        router.push("/");
+        const searchParams = new URLSearchParams(window.location.search);
+        const redirect = searchParams.get("redirect") || ROUTES.MEMOS;
+        router.replace(redirect);
       } catch (_err) {
         setError("로그인에 실패했습니다. 다시 시도해주세요.");
       } finally {
