@@ -22,26 +22,20 @@ export async function oauthLoginAction(
     throw new Error(error.error || "OAuth login failed");
   }
 
-  const setCookieHeader = response.headers.get("set-cookie");
-  if (setCookieHeader) {
-    const cookieStore = await cookies();
-    const tokenMatch = setCookieHeader.match(/access_token=([^;]+)/);
-    const maxAgeMatch = setCookieHeader.match(/Max-Age=(\d+)/);
+  const data: AuthResponse = await response.json();
 
-    if (tokenMatch) {
-      cookieStore.set({
-        name: "access_token",
-        value: tokenMatch[1],
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        maxAge: maxAgeMatch ? Number.parseInt(maxAgeMatch[1], 10) : 86400,
-        path: "/",
-      });
-    }
-  }
+  const cookieStore = await cookies();
+  cookieStore.set({
+    name: "access_token",
+    value: data.access_token,
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: data.expires_in,
+    path: "/",
+  });
 
-  return response.json();
+  return data;
 }
 
 export async function logoutAction(): Promise<void> {

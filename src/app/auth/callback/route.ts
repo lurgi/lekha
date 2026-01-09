@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { oauthLoginAction } from "@/app/actions/auth";
+import { ROUTES } from "@/constants/routes";
 
 interface KakaoUserInfo {
   id: number;
@@ -37,7 +38,7 @@ async function handleKakaoCallback(
         grant_type: "authorization_code",
         client_id: process.env.NEXT_PUBLIC_KAKAO_APP_KEY || "",
         client_secret: process.env.KAKAO_CLIENT_SECRET || "",
-        redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/auth/callback`,
+        redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}${ROUTES.AUTH_CALLBACK}`,
         code,
       }),
     });
@@ -46,7 +47,7 @@ async function handleKakaoCallback(
       const error = await tokenResponse.json();
       console.error("Kakao token exchange failed:", error);
       return NextResponse.redirect(
-        new URL("/login?error=token_exchange_failed", request.url),
+        new URL(`${ROUTES.LOGIN}?error=token_exchange_failed`, request.url),
       );
     }
 
@@ -61,7 +62,7 @@ async function handleKakaoCallback(
     if (!userResponse.ok) {
       console.error("Kakao user info fetch failed");
       return NextResponse.redirect(
-        new URL("/login?error=user_info_failed", request.url),
+        new URL(`${ROUTES.LOGIN}?error=user_info_failed`, request.url),
       );
     }
 
@@ -74,10 +75,14 @@ async function handleKakaoCallback(
       username: "User",
     });
 
-    return NextResponse.redirect(new URL("/", request.url));
+    const searchParams = request.nextUrl.searchParams;
+    const redirectPath = searchParams.get("redirect") || ROUTES.MEMOS;
+    return NextResponse.redirect(new URL(redirectPath, request.url));
   } catch (error) {
     console.error("Kakao login error:", error);
-    return NextResponse.redirect(new URL("/login?error=unknown", request.url));
+    return NextResponse.redirect(
+      new URL(`${ROUTES.LOGIN}?error=unknown`, request.url),
+    );
   }
 }
 
@@ -96,7 +101,7 @@ async function handleNaverCallback(
         grant_type: "authorization_code",
         client_id: process.env.NEXT_PUBLIC_NAVER_CLIENT_ID || "",
         client_secret: process.env.NAVER_CLIENT_SECRET || "",
-        redirect_uri: "http://localhost:3000/auth/callback",
+        redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}${ROUTES.AUTH_CALLBACK}`,
         code,
         state,
       }),
@@ -106,7 +111,7 @@ async function handleNaverCallback(
       const error = await tokenResponse.json();
       console.error("Naver token exchange failed:", error);
       return NextResponse.redirect(
-        new URL("/login?error=token_exchange_failed", request.url),
+        new URL(`${ROUTES.LOGIN}?error=token_exchange_failed`, request.url),
       );
     }
 
@@ -123,7 +128,7 @@ async function handleNaverCallback(
       const res = await userResponse.json();
       console.log(res);
       return NextResponse.redirect(
-        new URL("/login?error=user_info_failed", request.url),
+        new URL(`${ROUTES.LOGIN}?error=user_info_failed`, request.url),
       );
     }
 
@@ -132,7 +137,7 @@ async function handleNaverCallback(
     if (userResult.resultcode !== "00") {
       console.error("Naver API error:", userResult.message);
       return NextResponse.redirect(
-        new URL("/login?error=naver_api_failed", request.url),
+        new URL(`${ROUTES.LOGIN}?error=naver_api_failed`, request.url),
       );
     }
 
@@ -146,10 +151,14 @@ async function handleNaverCallback(
         "Naver User",
     });
 
-    return NextResponse.redirect(new URL("/", request.url));
+    const searchParams = request.nextUrl.searchParams;
+    const redirectPath = searchParams.get("redirect") || ROUTES.MEMOS;
+    return NextResponse.redirect(new URL(redirectPath, request.url));
   } catch (error) {
     console.error("Naver login error:", error);
-    return NextResponse.redirect(new URL("/login?error=unknown", request.url));
+    return NextResponse.redirect(
+      new URL(`${ROUTES.LOGIN}?error=unknown`, request.url),
+    );
   }
 }
 
@@ -159,11 +168,15 @@ export async function GET(request: NextRequest) {
   const state = searchParams.get("state");
 
   if (!code) {
-    return NextResponse.redirect(new URL("/login?error=no_code", request.url));
+    return NextResponse.redirect(
+      new URL(`${ROUTES.LOGIN}?error=no_code`, request.url),
+    );
   }
 
   if (!state) {
-    return NextResponse.redirect(new URL("/login?error=no_state", request.url));
+    return NextResponse.redirect(
+      new URL(`${ROUTES.LOGIN}?error=no_state`, request.url),
+    );
   }
 
   if (state === "kakao_login") {
@@ -175,6 +188,6 @@ export async function GET(request: NextRequest) {
   }
 
   return NextResponse.redirect(
-    new URL("/login?error=invalid_state", request.url),
+    new URL(`${ROUTES.LOGIN}?error=invalid_state`, request.url),
   );
 }
