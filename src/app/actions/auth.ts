@@ -24,17 +24,6 @@ export async function oauthLoginAction(
 
   const data: AuthResponse = await response.json();
 
-  const cookieStore = await cookies();
-  cookieStore.set({
-    name: "access_token",
-    value: data.access_token,
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: data.expires_in,
-    path: "/",
-  });
-
   return data;
 }
 
