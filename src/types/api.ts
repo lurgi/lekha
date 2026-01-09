@@ -16,6 +16,8 @@ export interface UserResponse {
 
 export interface AuthResponse {
   user: UserResponse;
+  access_token: string;
+  expires_in: number;
 }
 
 export interface ErrorResponse {
