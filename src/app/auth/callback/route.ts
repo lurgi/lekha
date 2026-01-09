@@ -1,6 +1,8 @@
+import { cookies } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
 import { oauthLoginAction } from "@/app/actions/auth";
 import { ROUTES } from "@/constants/routes";
+import type { AuthResponse } from "@/types/api";
 
 interface KakaoUserInfo {
   id: number;
@@ -22,6 +24,20 @@ interface NaverUserInfo {
     name?: string;
     nickname?: string;
   };
+}
+
+async function setAccessTokenCookie(data: AuthResponse) {
+  const cookieStore = await cookies();
+
+  cookieStore.set({
+    name: "access_token",
+    value: data.access_token,
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: data.expires_in,
+    path: "/",
+  });
 }
 
 async function handleKakaoCallback(
@@ -73,6 +89,8 @@ async function handleKakaoCallback(
       provider_user_id: String(userInfo.id),
       email: userInfo.kakao_account?.email,
       username: "User",
+    }).then(async (data) => {
+      await setAccessTokenCookie(data);
     });
 
     const searchParams = request.nextUrl.searchParams;
@@ -149,6 +167,8 @@ async function handleNaverCallback(
         userResult.response.nickname ||
         userResult.response.name ||
         "Naver User",
+    }).then(async (data) => {
+      await setAccessTokenCookie(data);
     });
 
     const searchParams = request.nextUrl.searchParams;
