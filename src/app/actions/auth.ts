@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import type { AuthResponse, OAuthLoginRequest } from "@/types/api";
+import type { AuthResponse, OAuthLoginRequest } from "@/types";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080";

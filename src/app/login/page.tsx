@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { oauthLoginAction } from "@/app/actions/auth";
 import { Button } from "@/components/ui/Button";
 import { ROUTES } from "@/constants/routes";
-import type { OAuthProvider } from "@/types/api";
+import type { OAuthProvider } from "@/types";
 
 const OAUTH_CALLBACK_URL = `${typeof window !== "undefined" ? window.location.origin : ""}${ROUTES.AUTH_CALLBACK}`;
 

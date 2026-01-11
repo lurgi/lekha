@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
 import { oauthLoginAction } from "@/app/actions/auth";
 import { ROUTES } from "@/constants/routes";
-import type { AuthResponse } from "@/types/api";
+import type { AuthResponse } from "@/types";
 
 interface KakaoUserInfo {
   id: number;
