@@ -19,6 +19,7 @@
 ## 개발 환경
 
 - **Framework**: Next.js 16 (App Router)
+- **Package Manager**: Yarn 4.9.4
 - **Styling**: Tailwind CSS v4
 - **State**: TanStack Query
 - **Backend**: http://localhost:8080
