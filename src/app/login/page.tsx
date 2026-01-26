@@ -1,15 +1,12 @@
 "use client";
 
-import { useGoogleLogin } from "@react-oauth/google";
 import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { oauthLoginAction } from "@/app/actions/auth";
+import { useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { ROUTES } from "@/constants/routes";
 import type { OAuthProvider } from "@/types";
-
-const OAUTH_CALLBACK_URL = `${typeof window !== "undefined" ? window.location.origin : ""}${ROUTES.AUTH_CALLBACK}`;
+import { useGoogleLogin } from "./useGoogleLogin";
+import { useKakaoLogin } from "./useKakaoLogin";
+import { useNaverLogin } from "./useNaverLogin";
 
 const COPYWRITING = {
   tagline: "당신의 생각이 💭 글이 되도록 ✏️",
@@ -18,7 +15,7 @@ const COPYWRITING = {
 
 interface OAuthButtonProps {
   isLoading: boolean;
-  setIsLoading: (provider: OAuthProvider | null) => void;
+  setIsLoading: (isLoading: boolean) => void;
   setError: (error: string | null) => void;
 }
 
@@ -27,48 +24,12 @@ function GoogleLoginButton({
   setIsLoading,
   setError,
 }: OAuthButtonProps) {
-  const router = useRouter();
-
-  const handleGoogleLogin = useGoogleLogin({
-    onSuccess: async (response) => {
-      try {
-        setIsLoading("Google");
-        setError(null);
-
-        const userInfoResponse = await fetch(
-          "https://www.googleapis.com/oauth2/v3/userinfo",
-          {
-            headers: { Authorization: `Bearer ${response.access_token}` },
-          },
-        );
-
-        const userInfo = await userInfoResponse.json();
-
-        await oauthLoginAction({
-          provider: "Google",
-          provider_user_id: userInfo.sub,
-          email: userInfo.email,
-          username: userInfo.name,
-        });
-
-        const searchParams = new URLSearchParams(window.location.search);
-        const redirect = searchParams.get("redirect") || ROUTES.MEMOS;
-        router.replace(redirect);
-      } catch (_err) {
-        setError("로그인에 실패했습니다. 다시 시도해주세요.");
-      } finally {
-        setIsLoading(null);
-      }
-    },
-    onError: () => {
-      setError("Google 로그인에 실패했습니다.");
-    },
-  });
+  const { handleGoogleLogin } = useGoogleLogin({ setIsLoading, setError });
 
   return (
     <Button
       type="button"
-      onClick={() => handleGoogleLogin()}
+      onClick={handleGoogleLogin}
       disabled={isLoading}
       className="w-full bg-white border-2 border-neutral-300 text-neutral-900 hover:bg-neutral-50 rounded-xl focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2"
     >
@@ -109,28 +70,7 @@ function KakaoLoginButton({
   setIsLoading,
   setError,
 }: OAuthButtonProps) {
-  useEffect(() => {
-    const kakaoAppKey = process.env.NEXT_PUBLIC_KAKAO_APP_KEY;
-    if (window.Kakao && !window.Kakao.isInitialized() && kakaoAppKey) {
-      window.Kakao.init(kakaoAppKey);
-    }
-  }, []);
-
-  const handleKakaoLogin = () => {
-    if (!window.Kakao) {
-      setError("Kakao SDK가 로드되지 않았습니다.");
-      return;
-    }
-
-    setIsLoading("Kakao");
-    setError(null);
-
-    window.Kakao.Auth.authorize({
-      redirectUri: OAUTH_CALLBACK_URL,
-      state: "kakao_login",
-      scope: "account_email",
-    });
-  };
+  const { handleKakaoLogin } = useKakaoLogin({ setIsLoading, setError });
 
   return (
     <Button
@@ -162,18 +102,7 @@ function NaverLoginButton({
   setIsLoading,
   setError,
 }: OAuthButtonProps) {
-  const handleNaverLogin = () => {
-    const clientId = process.env.NEXT_PUBLIC_NAVER_CLIENT_ID;
-    const redirectUri = encodeURIComponent(OAUTH_CALLBACK_URL);
-    const state = `naver_${Math.random().toString(36).substring(7)}`;
-
-    const naverAuthUrl = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&state=${state}`;
-
-    setIsLoading("Naver");
-    setError(null);
-
-    window.location.href = naverAuthUrl;
-  };
+  const { handleNaverLogin } = useNaverLogin({ setIsLoading, setError });
 
   return (
     <Button
@@ -201,7 +130,9 @@ function NaverLoginButton({
 }
 
 export default function LoginPage() {
-  const [isLoading, setIsLoading] = useState<OAuthProvider | null>(null);
+  const [loadingProvider, setLoadingProvider] = useState<OAuthProvider | null>(
+    null,
+  );
   const [error, setError] = useState<string | null>(null);
 
   return (
@@ -218,18 +149,24 @@ export default function LoginPage() {
 
         <div className="space-y-3">
           <GoogleLoginButton
-            isLoading={isLoading === "Google"}
-            setIsLoading={setIsLoading}
+            isLoading={loadingProvider === "Google"}
+            setIsLoading={(isLoading) =>
+              setLoadingProvider(isLoading ? "Google" : null)
+            }
             setError={setError}
           />
           <KakaoLoginButton
-            isLoading={isLoading === "Kakao"}
-            setIsLoading={setIsLoading}
+            isLoading={loadingProvider === "Kakao"}
+            setIsLoading={(isLoading) =>
+              setLoadingProvider(isLoading ? "Kakao" : null)
+            }
             setError={setError}
           />
           <NaverLoginButton
-            isLoading={isLoading === "Naver"}
-            setIsLoading={setIsLoading}
+            isLoading={loadingProvider === "Naver"}
+            setIsLoading={(isLoading) =>
+              setLoadingProvider(isLoading ? "Naver" : null)
+            }
             setError={setError}
           />
         </div>

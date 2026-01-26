@@ -1,8 +1,6 @@
-import { cookies } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
-import { oauthLoginAction } from "@/app/actions/auth";
+import { oauthLoginAction, setAccessTokenCookie } from "@/app/actions/auth";
 import { ROUTES } from "@/constants/routes";
-import type { AuthResponse } from "@/types";
 
 interface KakaoUserInfo {
   id: number;
@@ -24,20 +22,6 @@ interface NaverUserInfo {
     name?: string;
     nickname?: string;
   };
-}
-
-async function setAccessTokenCookie(data: AuthResponse) {
-  const cookieStore = await cookies();
-
-  cookieStore.set({
-    name: "access_token",
-    value: data.access_token,
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    maxAge: data.expires_in,
-    path: "/",
-  });
 }
 
 async function handleKakaoCallback(
